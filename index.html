@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#079b70">
+  <meta name="color-scheme" content="light dark">
+  <script>try{var p=localStorage.getItem("mymoney_theme")||"auto",d=p==="dark"||(p==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.dataset.theme=d?"dark":"light";document.documentElement.dataset.pref=p}catch(e){}</script>
+  <meta name="description" content="My Money — catatan keuangan pribadi yang sederhana, cerdas, dan privat.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="My Money">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>My Money — Keuanganmu, lebih teratur</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="My Money Beranda">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 11.5 24 4l9 5-17 8z" fill="#d8fff0"/><rect x="5" y="12" width="29" height="22" rx="6" fill="#10b981"/><rect x="23" y="19" width="14" height="10" rx="4" fill="#087653"/><circle cx="27" cy="24" r="1.5" fill="#fff"/></svg></span>
+        <span><strong>My Money</strong><small>Keuanganmu, lebih teratur</small></span>
+      </a>
+      <div class="top-actions"><button class="icon-btn" id="themeToggle" aria-label="Ganti mode terang atau gelap" title="Mode terang/gelap"><svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button class="icon-btn" id="profileQuick" aria-label="Buka akun" title="Akun"><span id="avatarTop">M</span></button></div>
+    </header>
+
+    <main id="mainContent">
+      <section class="page active" id="page-home" data-page="home">
+        <div class="welcome-row"><div><p class="eyebrow" id="welcomeDate">RINGKASAN HARI INI</p><h1 id="welcomeTitle">Halo, teman 👋</h1><p class="subtle">Pelan-pelan, yang penting terpantau.</p></div><span class="live-dot"><i></i> Tersimpan di perangkat</span></div>
+        <section class="balance-card">
+          <div class="balance-top"><span>Saldo saat ini</span><button class="eye-btn" id="toggleBalance" aria-label="Sembunyikan saldo">◉</button></div>
+          <div class="balance-value" id="balanceValue">Rp 0</div>
+          <div class="balance-bottom"><span id="balanceLabel">Saldo awal + pemasukan − pengeluaran</span><span class="balance-chip">● Real-time</span></div>
+          <div class="balance-wave" aria-hidden="true"></div>
+        </section>
+        <div class="metric-grid">
+          <article class="metric-card"><span class="metric-icon income-icon">↙</span><div><p>Pemasukan bulan ini</p><strong class="positive" id="monthIncome">Rp 0</strong><small id="incomeCompare">Total pemasukan</small></div></article>
+          <article class="metric-card"><span class="metric-icon expense-icon">↗</span><div><p>Pengeluaran bulan ini</p><strong class="negative" id="monthExpense">Rp 0</strong><small id="expenseCompare">Total pengeluaran</small></div></article>
+        </div>
+        <section class="section-block">
+          <div class="section-heading"><div><p class="eyebrow">AKTIVITAS</p><h2>Transaksi terbaru</h2></div><button class="text-btn" data-go="transactions">Lihat semua <span>→</span></button></div>
+          <div class="panel transaction-list" id="recentList"></div>
+        </section>
+        <section class="section-block two-col">
+          <div class="panel insight-panel"><div class="panel-heading"><span class="heading-icon mint">✦</span><div><h3>Insight pengeluaran</h3><p>Catatan kecil untukmu</p></div></div><div id="insightContent" class="insight-copy">Mulai catat transaksi untuk melihat insight keuanganmu.</div></div>
+          <div class="panel goal-panel"><div class="panel-heading"><span class="heading-icon lilac">◎</span><div><h3>Target tabungan</h3><p id="goalMeta">Atur tujuanmu</p></div></div><div class="goal-number" id="goalNumber">Rp 0</div><div class="progress-track"><span id="goalProgress"></span></div><div class="goal-foot"><span id="goalPercent">0% tercapai</span><button class="text-btn small" data-go="account">Atur target</button></div></div>
+        </section>
+        <section class="section-block"><div class="section-heading"><div><p class="eyebrow">KATEGORI</p><h2>Ke mana uangmu pergi?</h2></div><button class="text-btn" data-go="reports">Laporan →</button></div><div class="panel category-panel" id="homeCategories"></div></section>
+      </section>
+
+      <section class="page" id="page-transactions" data-page="transactions">
+        <div class="page-title-row"><div><p class="eyebrow">CATATAN KEUANGAN</p><h1>Transaksi</h1><p class="subtle">Semua pemasukan dan pengeluaranmu.</p></div><button class="primary-btn compact" id="newTransactionTop">＋ Catat</button></div>
+        <div class="search-field"><span>⌕</span><input id="transactionSearch" type="search" placeholder="Cari kopi, gaji, transportasi…" aria-label="Cari transaksi"><button id="clearSearch" aria-label="Hapus pencarian">×</button></div>
+        <div class="filter-row" id="transactionFilters"><button class="filter-pill selected" data-filter="all">Semua</button><button class="filter-pill" data-filter="income">Pemasukan</button><button class="filter-pill" data-filter="expense">Pengeluaran</button></div>
+        <div class="summary-strip"><div><span>Total masuk</span><strong class="positive" id="txIncome">Rp 0</strong></div><div><span>Total keluar</span><strong class="negative" id="txExpense">Rp 0</strong></div></div>
+        <div id="transactionGroups" class="transaction-groups"></div>
+        <div class="bottom-space"></div>
+      </section>
+
+      <section class="page" id="page-reports" data-page="reports">
+        <div class="page-title-row"><div><p class="eyebrow">LIHAT POLA UANGMU</p><h1>Laporan</h1><p class="subtle">Ringkasan yang mudah dipahami.</p></div><button class="icon-btn outline" id="exportCsvTop" title="Ekspor CSV" aria-label="Ekspor CSV">⇩</button></div>
+        <div class="month-switch"><button id="monthPrev" aria-label="Bulan sebelumnya">‹</button><strong id="reportMonth">Bulan ini</strong><button id="monthNext" aria-label="Bulan berikutnya">›</button></div>
+        <div class="report-summary-grid"><div class="panel report-stat"><span class="stat-dot green"></span><p>Pemasukan</p><strong class="positive" id="reportIncome">Rp 0</strong></div><div class="panel report-stat"><span class="stat-dot red"></span><p>Pengeluaran</p><strong class="negative" id="reportExpense">Rp 0</strong></div></div>
+        <section class="panel chart-panel"><div class="section-heading"><div><h3>Pengeluaran terbesar</h3><p class="subtle tiny">Uangmu paling banyak keluar untuk apa</p></div></div><div id="pieExpense"></div></section>
+        <section class="panel chart-panel"><div class="section-heading"><div><h3>Sumber pemasukan</h3><p class="subtle tiny">Uangmu paling banyak masuk dari mana</p></div></div><div id="pieIncome"></div></section>
+        <section class="panel chart-panel"><div class="section-heading"><div><h3>Arus kas</h3><p class="subtle tiny">Perbandingan pemasukan dan pengeluaran</p></div><span class="chart-legend"><i class="legend-in"></i> Masuk <i class="legend-out"></i> Keluar</span></div><div id="cashflowChart" class="bar-chart"></div></section>
+                <section class="panel report-note"><span class="heading-icon mint">✦</span><div><strong>Catatan bulan ini</strong><p id="reportInsight">Data laporan muncul ketika kamu mulai mencatat transaksi.</p></div></section>
+      </section>
+
+      <section class="page" id="page-tools" data-page="tools">
+        <div class="page-title-row"><div><p class="eyebrow">ALAT BANTU CERDAS</p><h1>Scan & alat</h1><p class="subtle">Bantu catat tanpa ribet.</p></div></div>
+        <div class="tool-card featured-tool"><div class="tool-illustration receipt-illustration">▤<span>✓</span></div><div class="tool-copy"><h2>Scan struk belanja</h2><p>Foto atau upload struk. Total, tanggal, dan kategori dibaca otomatis lalu langsung masuk ke laporan.</p><button class="primary-btn" id="openReceipt">Scan struk sekarang <span>→</span></button></div></div>
+        <div class="tool-card"><div class="tool-illustration transfer-illustration">▥</div><div class="tool-copy"><h2>Baca mutasi dari teks</h2><p>Tempel teks mutasi bank atau e-wallet. My Money akan mencoba mengenali nominal untuk kamu tinjau.</p><button class="secondary-btn" id="openStatement">Tempel teks mutasi</button></div></div>
+        <div class="tool-card"><div class="tool-illustration voice-illustration">⌁</div><div class="tool-copy"><h2>Catat dengan suara</h2><p>Misalnya: “beli kopi 18 ribu”. Periksa hasil transkripsi sebelum menyimpan.</p><button class="secondary-btn" id="voiceQuick">🎙 Mulai bicara</button><small class="subtle">Tergantung dukungan browser dan pengaturan bahasa iPhone.</small></div></div>
+        <div class="privacy-note"><span>🔒</span><p><strong>Privasi dulu.</strong> Catatan keuangan disimpan di browser pada perangkat ini. Foto yang dipilih diproses di halaman ini; fitur OCR memerlukan koneksi internet untuk memuat mesin pembaca teks.</p></div>
+      </section>
+
+      <section class="page" id="page-account" data-page="account">
+        <div class="page-title-row"><div><p class="eyebrow">PENGATURAN PRIBADI</p><h1>Akun</h1><p class="subtle">Sesuaikan My Money dengan kebutuhanmu.</p></div></div>
+        <div class="account-hero panel"><div class="avatar-large" id="avatarLarge">M</div><div><h2 id="accountName">Teman My Money</h2><p class="subtle">Pengelola keuangan pribadi</p></div><span class="local-badge">● Lokal</span></div>
+        <section class="panel settings-form"><div class="form-section-title"><span class="heading-icon mint">◐</span><div><h3>Tampilan</h3><p>Pilih mode terang, gelap, atau ikuti iPhone.</p></div></div><div class="seg" id="themeSeg"><button type="button" data-theme-pref="auto">Otomatis</button><button type="button" data-theme-pref="light">Terang</button><button type="button" data-theme-pref="dark">Gelap</button></div></section>
+        <form id="settingsForm" class="panel settings-form">
+          <div class="form-section-title"><span class="heading-icon mint">☻</span><div><h3>Profil & saldo awal</h3><p>Digunakan untuk menghitung saldo kamu.</p></div></div>
+          <label>Nama panggilan<input id="settingName" maxlength="40" placeholder="Misalnya, Ara" required></label>
+          <label>Saldo awal (Rp)<input id="settingBalance" inputmode="numeric" type="number" min="0" step="1000" placeholder="0"></label>
+          <label>Target tabungan (Rp)<input id="settingGoal" inputmode="numeric" type="number" min="0" step="10000" placeholder="Misalnya, 5000000"></label>
+          <button class="primary-btn full-width" type="submit">Simpan pengaturan</button>
+        </form>
+        <section class="panel settings-list"><div class="setting-item"><div><strong>Cadangkan data</strong><p>Unduh backup JSON untuk disimpan sendiri.</p></div><button class="secondary-btn" id="backupBtn">Backup</button></div><div class="setting-item"><div><strong>Pulihkan data</strong><p>Impor backup My Money sebelumnya.</p></div><button class="secondary-btn" id="restoreBtn">Pulihkan</button><input type="file" id="restoreInput" accept="application/json,.json" hidden></div><div class="setting-item"><div><strong>Ekspor transaksi</strong><p>Buka data di Numbers, Excel, atau Sheets.</p></div><button class="secondary-btn" id="exportCsv">Ekspor CSV</button></div><div class="setting-item"><div><strong>Tambahkan ke iPhone</strong><p>Simpan My Money di Home Screen Safari.</p></div><button class="secondary-btn" id="installHelp">Cara pasang</button></div><div class="setting-item danger-setting"><div><strong>Hapus semua transaksi</strong><p>Tindakan ini tidak bisa dibatalkan.</p></div><button class="danger-btn" id="clearAll">Hapus</button></div></section>
+        <p class="version-line">MY MONEY WEB · v1.1 · Data tersimpan di perangkat ini</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigasi utama">
+      <button class="nav-item active" data-nav="home"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span>Beranda</span></button>
+      <button class="nav-item" data-nav="transactions"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></span><span>Transaksi</span></button>
+      <button class="nav-add" id="navAdd" aria-label="Tambah transaksi">＋</button>
+      <button class="nav-item" data-nav="tools"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M7 12h10"/></svg></span><span>Scan</span></button>
+      <button class="nav-item" data-nav="reports"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3v9h9"/><path d="M20.5 15A9 9 0 1 1 9 3.5"/></svg></span><span>Laporan</span></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="transactionModal" aria-hidden="true"><section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="sheet-handle"></div><div class="modal-heading"><div><p class="eyebrow">CATAT DENGAN MUDAH</p><h2 id="modalTitle">Transaksi baru</h2></div><button class="icon-btn close-modal" data-close="transactionModal" aria-label="Tutup">×</button></div>
+    <form id="transactionForm"><div class="type-toggle"><button type="button" class="selected" data-type="expense">− Pengeluaran</button><button type="button" data-type="income">＋ Pemasukan</button></div><input type="hidden" id="entryType" value="expense"><label>Nama transaksi<div class="input-with-action"><input id="entryTitle" placeholder="Contoh: Kopi susu, gaji…" autocomplete="off" required maxlength="80"><button type="button" id="voiceEntry" aria-label="Isi dengan suara">🎙</button></div><div id="suggestions" class="suggestions"></div></label><label>Nominal (Rp)<input id="entryAmount" inputmode="numeric" type="number" min="1" step="1" placeholder="0" required></label><div class="form-row"><label>Kategori<select id="entryCategory"><option>Makan & Minum</option><option>Transportasi</option><option>Belanja</option><option>Tagihan</option><option>Kesehatan</option><option>Pendidikan</option><option>Hiburan</option><option>Gaji</option><option>Bonus</option><option>Hadiah</option><option>Investasi</option><option>Lainnya</option></select></label><label>Tanggal<input id="entryDate" type="date" required></label></div><label>Catatan (opsional)<textarea id="entryNote" rows="2" placeholder="Tambah detail kecil…" maxlength="250"></textarea><button class="primary-btn full-width submit-entry" type="submit">Simpan transaksi</button></form>
+  </section></div>
+
+  <div class="modal-backdrop" id="receiptModal" aria-hidden="true"><section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="receiptTitle"><div class="sheet-handle"></div><div class="modal-heading"><div><p class="eyebrow">LANGSUNG KE LAPORAN</p><h2 id="receiptTitle">Scan struk</h2></div><button class="icon-btn close-modal" data-close="receiptModal" aria-label="Tutup">×</button></div>
+    <div class="scan-actions"><label class="scan-btn primary"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><strong>Foto struk</strong><small>Buka kamera</small><input id="receiptCamera" class="sr" type="file" accept="image/*" capture="environment"></label><label class="scan-btn"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg><strong>Upload</strong><small>Dari galeri / File</small><input id="receiptUpload" class="sr" type="file" accept="image/*"></label></div>
+    <p class="scan-tip">Tips: letakkan struk di permukaan rata, cahaya terang, dan seluruh struk terlihat jelas.</p>
+    <img id="receiptPreview" class="receipt-preview" alt="Pratinjau struk" hidden><div class="scan-progress" id="scanProgress" hidden><i id="scanBar"></i></div><div id="ocrStatus" class="ocr-status" aria-live="polite"></div>
+    <form id="receiptForm" hidden><label class="rc-total">Total belanja (Rp)<input id="rcAmount" type="number" inputmode="numeric" min="1" step="1" placeholder="0" required></label><label>Nama toko / transaksi<input id="rcTitle" maxlength="80" placeholder="Misalnya, Alfamart"></label><div class="form-row"><label>Tanggal<input id="rcDate" type="date" required></label><label>Kategori<select id="rcCategory"><option>Makan &amp; Minum</option><option>Transportasi</option><option>Belanja</option><option>Tagihan</option><option>Kesehatan</option><option>Pendidikan</option><option>Hiburan</option><option>Lainnya</option></select></label></div><details><summary>Teks hasil baca</summary><textarea id="ocrText" rows="5"></textarea></details><button class="primary-btn full-width" type="submit">Simpan ke laporan</button></form>
+  </section></div>
+
+  <div class="modal-backdrop" id="statementModal" aria-hidden="true"><section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="statementTitle"><div class="sheet-handle"></div><div class="modal-heading"><div><p class="eyebrow">IMPOR SECARA MANUAL</p><h2 id="statementTitle">Teks mutasi</h2></div><button class="icon-btn close-modal" data-close="statementModal" aria-label="Tutup">×</button></div><p class="subtle">Salin teks dari riwayat bank atau e-wallet, lalu tempelkan di bawah. Jangan tempelkan PIN, password, atau data rahasia.</p><label>Tempel teks mutasi<textarea id="statementText" rows="6" placeholder="Contoh: Pembayaran minimarket Rp 45.000"></textarea></label><button class="primary-btn full-width" id="parseStatement" type="button">Kenali nominal</button><div id="statementResults" class="statement-results"></div></section></div>
+
+  <div class="modal-backdrop" id="onboardingModal" aria-hidden="true"><section class="modal-sheet onboarding-sheet" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle"><div class="onboarding-logo">✦</div><p class="eyebrow center">SELAMAT DATANG</p><h2 id="onboardingTitle">Mulai lebih sadar soal uang.</h2><p class="subtle center">Atur akun kecilmu. Tidak perlu menghubungkan rekening bank.</p><form id="onboardingForm"><label>Nama panggilan<input id="firstName" placeholder="Namamu" required maxlength="40"></label><label>Saldo awal (Rp)<input id="firstBalance" type="number" min="0" step="1000" inputmode="numeric" value="0" required></label><button class="primary-btn full-width" type="submit">Mulai pakai My Money →</button><p class="tiny subtle center">Datamu tersimpan secara lokal di browser.</p></form></section></div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="install-tip" id="installTip" role="dialog" aria-label="Cara menambahkan ke Home Screen"><button class="icon-btn tip-close" id="closeInstallTip" aria-label="Tutup">×</button><strong>Pasang My Money di iPhone</strong><p>Di Safari, tekan tombol <b>Bagikan</b> (kotak dengan panah ke atas), pilih <b>Tambahkan ke Layar Utama</b>, lalu tekan <b>Tambah</b>.</p><button class="primary-btn full-width" id="gotInstallTip">Mengerti</button></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
