@@ -1,0 +1,64 @@
+name: Publish My Money to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Check and publish website
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download repository files
+        uses: actions/checkout@v4
+
+      - name: Prepare GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Check required files and app syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in index.html styles.css app.js manifest.webmanifest sw.js assets/icon.svg assets/icon-192.png assets/icon-512.png; do
+            if [ ! -s "$file" ]; then
+              echo "ERROR: Required file missing or empty: $file"
+              echo "Upload the CONTENTS of the MyMoney ZIP to the repository root."
+              exit 1
+            fi
+          done
+          node --check app.js
+
+      - name: Prepare clean website package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/assets
+          cp index.html styles.css app.js manifest.webmanifest sw.js _site/
+          cp assets/icon.svg assets/icon-192.png assets/icon-512.png _site/assets/
+          touch _site/.nojekyll
+
+      - name: Upload website package
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Publish website
+        id: deployment
+        uses: actions/deploy-pages@v4
